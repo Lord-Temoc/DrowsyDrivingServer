@@ -10,6 +10,7 @@ import imutils
 import time
 import dlib
 import cv2
+import pygame
 
 # SETUP LED MATRIX
 fl = UnicornHATMini()
@@ -32,23 +33,27 @@ def wake_up():
     if alarm:
         cv2.putText(frame, "Eye: {}".format("sleeping"), (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 0, 255), 2)
         flash()
-    else:
-        idle()
+    
 
 # FLASH THE LED MATRIX
 def flash():
-    while a < 5:
+    pygame.mixer.init()
+    pygame.mixer.music.load("testAudio.wav")
+    pygame.mixer.music.play()
+    
+    a = 0;
+    while a < 40:
         for x in range(17):
             for y in range(7):
                 fl.set_pixel(x,y,255,255,255)
         
         a += 1
         fl.show()
-        time.sleep(0.5)
+        time.sleep(0.10)
 
         fl.clear()
         fl.show()
-        time.sleep(0.5)
+        time.sleep(0.10)
 
         print(a)
         
@@ -56,8 +61,14 @@ def flash():
 def idle():
     for x in range(17):
         for y in range(7):
-            fl.set_pixel(x,y,0,0,255)
+            fl.set_pixel(x,y,255,0,0)
+
     fl.show()
+    time.sleep(2)
+    fl.clear()
+    fl.show()
+    time.sleep(2)
+
 
 #CONDITIONS TO BE MET FOR THE SLEEP CLASSIFICATION
 THRESH = 0.35
@@ -122,7 +133,7 @@ while True:
             counter = 0
             print(counter)
 
-        if counter > 10:
+        if counter > 5:
             alarm = True
             wake_up()
 

@@ -1,9 +1,23 @@
 import asyncio
 import websockets
+import random
+import time
 
-async def hello():
-    async with websockets.connect("ws://localhost:8765") as websocket:
-        await websocket.send("Hello world!")
-        await websocket.recv()
+try:
+    async def send(websocket, path):
+        while True:
+            await websocket.send("Hello World!")
+            await asyncio.sleep(1)
+            
+    start_server = websockets.serve(send, "", 8000)
 
-asyncio.run(hello())
+    asyncio.get_event_loop().run_until_complete(start_server)
+    asyncio.get_event_loop().run_forever()
+
+except KeyboardInterrupt:
+    print("\nSERVER: Stopped")
+
+    
+
+
+
